@@ -1,0 +1,38 @@
+.comments {
+  background: #273746;
+  padding: 15px;
+  border-radius: 10px;
+  color: #f1c40f;
+}
+.removeButton, .addButton {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+  transition: 0.3s;
+}
+
+.removeButton:hover {
+  background-color: #cc0000;
+}
+
+.addButton {
+  background-color: #00a6ff;
+  transition: 0.3s;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #007bff;
+  padding: 10px;
+  color: #e0e0e0;
+  border-radius: 5px;
+  outline: none;
+}

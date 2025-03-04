@@ -1,0 +1,49 @@
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;  
+  background-color: #1e313e;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  
+}
+
+.menu {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.item a {
+  color: #efd3a2;
+  font-size: 16px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.item a:hover {
+  color: rgb(0, 132, 139);
+}
+
+.item.active a {
+  color: rgb(0, 132, 139);
+  font-weight: bold;
+}
+
+
+.icon {
+  position:relative;
+  left:-40px;
+  width: 50px;
+  height: 50px;
+}
+.icon img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}

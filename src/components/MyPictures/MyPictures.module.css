@@ -1,0 +1,63 @@
+.mypictures {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    justify-content: center;
+    align-items: start;
+}
+
+.imagePost {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.uploadedImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.uploadedImage:hover {
+    transform: scale(1.05);
+}
+
+.removeButton{
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.imagePost:hover .removeButton {
+    opacity: 1;
+}
+.addButton {
+    background-color: #00a6ff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.addButton:hover {
+    background-color: #0056b3;
+}

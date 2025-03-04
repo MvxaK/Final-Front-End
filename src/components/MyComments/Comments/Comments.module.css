@@ -1,0 +1,27 @@
+.item {
+  color: #e0e0e0;
+  background: #2c3e50;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 2px solid #007bff;
+}
+.item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f1c40f;
+}
+.likeButton{
+  background-color: #00b012;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+}
+.likeButton:hover{
+  background-color: #007a0c;
+}

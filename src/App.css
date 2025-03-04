@@ -1,0 +1,12 @@
+.app-wrapper{
+  margin: auto;
+  display:flex;
+  width: 100%;
+  gap: 10px;
+  background-color: #121212;
+  color: #E0E0E0;
+}
+
+body{
+  background-color: antiquewhite;
+}
