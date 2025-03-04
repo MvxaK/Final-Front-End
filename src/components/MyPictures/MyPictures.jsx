@@ -27,6 +27,7 @@ const MyPictures = () => {
             <textarea className={s.textarea} placeholder="Enter picture description here ..."></textarea>
             <br />
             <button className={s.addButton}>Add</button>
+            <input type="file" className={s.fileInput} />
             
             <h1>Your gallery</h1>
             <div className={s.gallery}>

@@ -61,3 +61,6 @@
 .addButton:hover {
     background-color: #0056b3;
 }
+.fileInput{
+    margin: 10px;
+}
