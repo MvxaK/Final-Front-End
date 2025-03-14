@@ -4,23 +4,15 @@
   border-radius: 10px;
   color: #f1c40f;
 }
-.removeButton, .addButton {
-  background-color: #ff4d4d;
+
+.addButton {
+  background-color: #00a6ff;
   color: white;
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
   margin: 5px;
-  transition: 0.3s;
-}
-
-.removeButton:hover {
-  background-color: #cc0000;
-}
-
-.addButton {
-  background-color: #00a6ff;
   transition: 0.3s;
 }
 
