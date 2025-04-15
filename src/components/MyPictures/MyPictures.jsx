@@ -108,7 +108,7 @@ const MyPictures = () => {
                         <img
                             className={s.uploadedImage}
                             src={image.src}
-                            alt="User picture"
+                            alt={image.description}
                             onClick={() => handleImageClick(image)}
                             style={{ cursor: "pointer" }}
                         />
@@ -134,7 +134,7 @@ const MyPictures = () => {
                 onChange={(e) => setDescription(e.target.value)}
             />
             <br />
-            <input type="file" className={s.fileInput} onChange={handleImageUpload} />
+            <input type="file" className={s.fileInput} onChange={handleImageUpload} aria-label="upload file" />
             <button className={s.addButton} onClick={addImage}>
                 Add
             </button>

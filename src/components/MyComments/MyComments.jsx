@@ -6,7 +6,7 @@ import avatar2 from '../images/avatars/avatar2.png';
 import avatar3 from '../images/avatars/avatar3.png';
 import avatar4 from '../images/avatars/avatar4.png';
 
-const MyComments = ({ profileImage }) => {
+export const MyComments = ({ profileImage }) => {
   const [comments, setComments] = useState([
     { id: 1, message: 'Example 1', image: avatar1, likes: 0 },
     { id: 2, message: 'Example 42', image: avatar2, likes: 0 },
