@@ -1,0 +1,44 @@
+.allPicturesPage {
+  padding: 20px;
+  background-color: #121212;
+  color: white;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.searchBar {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+.gallery {
+  width: 100%;
+  height: calc(100vh - 100px);
+}
+
+.imagePost {
+  margin: 10px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px;
+  transition: transform 0.2s ease;
+}
+
+.imagePost:hover {
+  transform: scale(1.03);
+}
+
+.uploadedImage {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.imageDescription {
+  margin-top: 10px;
+  font-size: 16px;
+}

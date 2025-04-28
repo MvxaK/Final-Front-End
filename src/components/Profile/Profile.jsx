@@ -14,7 +14,7 @@ const Profile = () => {
           <div className={s.profileInfo}>
             <h2>Amir Kamalov</h2>
             <p>Something something ... </p>
-            <button className={s.messageButton}>Go to the dialog</button>
+            <button className={s.messageButton}>Edit profile</button>
           </div>
         </div>
 

@@ -7,6 +7,15 @@ const PictureDetails = () => {
     const location = useLocation();
     const { imageSrc, description } = location.state || {};
 
+    const handleDownload = () => {
+        const link = document.createElement("a");
+        link.href = imageSrc;
+        link.download = "image.jpg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className={s.container}>
             <div className={s.content}>
@@ -18,6 +27,10 @@ const PictureDetails = () => {
                     </div>
                     <h3 className={s.descriptionTitle}>Description: </h3>
                     <p className={s.description}>{description}</p>
+
+                    <button className={s.downloadButton} onClick={handleDownload}>
+                        Download Photo
+                    </button>
                 </div>
             </div>
         </div>

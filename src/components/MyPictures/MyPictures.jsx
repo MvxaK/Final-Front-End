@@ -3,21 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Masonry, CellMeasurer, CellMeasurerCache, AutoSizer } from "react-virtualized";
 import createCellPositioner from "react-virtualized/dist/es/Masonry/createCellPositioner";
 import s from "./MyPictures.module.css";
+import { useContext } from "react";
+import { ImagesContext } from "../../context/ImagesContext";
 
-import picture1 from "../images/images_profile1/picture1.png";
-import picture2 from "../images/images_profile1/picture2.png";
-import picture3 from "../images/images_profile1/picture3.png";
-import picture4 from "../images/images_profile1/picture4.png";
-import picture5 from "../images/images_profile1/picture5.png";
-import picture6 from "../images/images_profile1/picture6.png";
-import picture7 from "../images/images_profile1/picture7.png";
-import picture8 from "../images/images_profile1/picture8.png";
-import picture9 from "../images/images_profile1/picture9.png";
-import picture10 from "../images/images_profile1/picture10.png";
-import picture11 from "../images/images_profile1/picture11.png";
-import picture12 from "../images/images_profile1/picture12.png";
-import picture13 from "../images/images_profile1/picture13.png";
-import picture14 from "../images/images_profile1/picture14.png";
 
 const MyPictures = () => {
     const navigate = useNavigate();
@@ -30,23 +18,8 @@ const MyPictures = () => {
     );
 
     const masonryRef = useRef(null);
-
-    const [images, setImages] = useState([
-        { id: 1, src: picture1, description: "Nature and bridge" },
-        { id: 2, src: picture2, description: "Beautiful mountain" },
-        { id: 3, src: picture3, description: "Land and sun" },
-        { id: 4, src: picture4, description: "Forest with sun light" },
-        { id: 5, src: picture5, description: "Plant with sun" },
-        { id: 6, src: picture6, description: "Mountain forest" },
-        { id: 7, src: picture7, description: "Mountain forest" },
-        { id: 8, src: picture8, description: "Mountain forest" },
-        { id: 9, src: picture9, description: "Mountain forest" },
-        { id: 10, src: picture10, description: "Mountain forest" },
-        { id: 11, src: picture11, description: "Mountain forest" },
-        { id: 12, src: picture12, description: "Mountain forest" },
-        { id: 13, src: picture13, description: "Mountain forest" },
-        { id: 14, src: picture14, description: "Mountain forest" },
-    ]);
+    const { images, setImages } = useContext(ImagesContext);
+    
 
     const [newImage, setNewImage] = useState(null);
     const [description, setDescription] = useState("");
@@ -163,7 +136,8 @@ const MyPictures = () => {
 function CellPositioner(cache, width) {
     const columnWidth = 300;
     const gutterSize = 20;
-    const columnCount = 5;
+    const columnCount = Math.floor(width / (columnWidth + gutterSize));
+
     
     const positionerConfig = {
         cellMeasurerCache: cache,

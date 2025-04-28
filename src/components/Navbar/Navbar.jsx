@@ -10,9 +10,6 @@ const Navbar = () => {
           <Link to="/">Profile</Link>
         </div>
         <div className={s.item}>
-          <Link to="/dialogs">Dialogs</Link>
-        </div>
-        <div className={s.item}>
           <Link to="/main">Main</Link>
         </div>
         <div className={s.item}>
