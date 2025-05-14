@@ -6,18 +6,22 @@ import { useNavigate } from "react-router-dom";
 import s from "./AllPictures.module.css";
 
 const PicturesGallery = () => {
-  const { images } = useContext(ImagesContext);
+  const { allImages } = useContext(ImagesContext);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const filteredImages = images.filter((img) =>
+  const filteredImages = allImages.filter((img) =>
     img.description.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleImageClick = (image) => {
-    navigate("/picture/:id", {
-        state: { imageSrc: image.src, description: image.description },
-    });
+    navigate(`/picture/${image.id}`, {
+        state: {
+          imageSrc: image.src,
+          description: image.description,
+          ownerId: image.ownerId || null,
+        },
+      });
   };
 
   const cache = useRef(
@@ -67,19 +71,6 @@ const PicturesGallery = () => {
       </CellMeasurer>
     );
   };
-
-  // const initPositioner = (width) => {
-  //   const columnWidth = 300;
-  //   const gutterSize = 20;
-  //   const columnCount = Math.max(Math.floor(width / (columnWidth + gutterSize)));
-
-  //   positioner.current = createCellPositioner({
-  //     cellMeasurerCache: cache.current,
-  //     columnCount,
-  //     columnWidth,
-  //     spacer: gutterSize,
-  //   });
-  // };
 
   return (
     <div className={s.allPicturesPage}>

@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { getStorage } from 'firebase/storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,11 +17,55 @@ const firebaseConfig = {
   appId: "1:393292716882:web:af2ee2772393ac3164388b",
   measurementId: "G-V0LFMGZCQR"
 };
-const app = initializeApp(firebaseConfig);
 
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
+const saveUserToFirestore = async (user) => {
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  
+  if (userSnap.exists()) {
+    const currentData = userSnap.data();
+    const updates = {};
+    
+    if (user.displayName) {
+      const [firstName, lastName] = user.displayName.split(' ');
+      if (currentData.name !== firstName) updates.name = firstName;
+      if (currentData.lastname !== lastName) updates.lastname = lastName;
+    }
+    
+    if (user.photoURL && currentData.avatarUrl !== user.photoURL) {
+      updates.avatarUrl = user.photoURL;
+    }
+    
+    if (Object.keys(updates).length > 0) {
+      await updateDoc(userRef, updates);
+    }
+  } else {
+    const [firstName, lastName] = user.displayName.split(' ');
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      name: firstName,
+      lastname: lastName,
+      avatarUrl: user.photoURL || "",
+      createdAt: new Date(),
+    });
+  }
+};
 
 
-export { auth, db };
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    console.log("User authorized", user);
+    saveUserToFirestore(user);
+  } else {
+    console.log("User is not authorized");
+  }
+});
+
+export { auth, db , storage};
 export default app;

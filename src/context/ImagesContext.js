@@ -1,4 +1,6 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { db } from "../firebase";
 import picture1 from "../../src/components/images/images_profile1/picture1.png";
 import picture2 from "../../src/components/images/images_profile1/picture2.png";
 import picture3 from "../../src/components/images/images_profile1/picture3.png";
@@ -17,7 +19,8 @@ import picture14 from "../../src/components/images/images_profile1/picture14.png
 export const ImagesContext = createContext();
 
 export const ImagesProvider = ({ children }) => {
-  const [images, setImages] = useState([
+  const [firebaseImages, setFirebaseImages] = useState([]);
+  const staticImages = [
           { id: 1, src: picture1, description: "Nature and bridge" },
           { id: 2, src: picture2, description: "Beautiful mountain" },
           { id: 3, src: picture3, description: "Land and sun" },
@@ -32,10 +35,52 @@ export const ImagesProvider = ({ children }) => {
           { id: 12, src: picture12, description: "Mountain forest" },
           { id: 13, src: picture13, description: "Mountain forest" },
           { id: 14, src: picture14, description: "Mountain forest" },
-      ]);
+      ];
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const querySnapshot = await getDocs(collection(db, "pictures"));
+      const allPictures = await Promise.all(
+        querySnapshot.docs.map(async (docSnap) => {
+          const data = docSnap.data();
+          let ownerData = {};
+          
+          // Безопасная проверка
+          if (data.ownerId) {
+            try {
+              const ownerSnap = await getDoc(doc(db, "users", data.ownerId));
+              if (ownerSnap.exists()) {
+                ownerData = ownerSnap.data();
+              }
+            } catch (err) {
+              console.error("Error fetching owner:", err);
+            }
+          }
+
+          return {
+            id: docSnap.id,
+            src: data.imageUrl,
+            description: data.description || "",
+            ownerId: data.ownerId || "",
+            ownerName: `${ownerData.name || ""} ${ownerData.lastname || ""}`.trim(),
+            ownerAvatar: ownerData.avatarUrl || "",
+          };
+        })
+      );
+      setFirebaseImages(allPictures);
+    };
+
+    fetchImages();
+  }, []);
+
+
+
+  const allImages = [...staticImages, ...firebaseImages];
 
   return (
-    <ImagesContext.Provider value={{ images, setImages }}>
+    <ImagesContext.Provider
+      value={{ staticImages, firebaseImages, setFirebaseImages, allImages }}
+    >
       {children}
     </ImagesContext.Provider>
   );

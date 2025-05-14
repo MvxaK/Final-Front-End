@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -19,12 +19,18 @@ const Register = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`,
+        photoURL: '',
+      });
+
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
+        name: firstName,
+        lastname: lastName,
+        avatarUrl: '',
         createdAt: new Date(),
-        displayName: `${firstName} ${lastName}`,
-        photoURL: '',
       });
 
       console.log('User created');
@@ -34,6 +40,7 @@ const Register = () => {
       alert('Error: ' + error.message);
     }
   };
+
 
   return (
     <div className={s.loginContainer}>

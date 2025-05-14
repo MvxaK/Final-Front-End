@@ -21,7 +21,7 @@ const App = () => {
         {!hideNavbar && <Navbar />}
         <Routes>
           <Route 
-            path="/" 
+            path="/profile/:userId" 
             element={
               <ProtectedRoute>
                 <Profile />
