@@ -1,11 +1,16 @@
 import React from 'react';
 import s from './Comments.module.css';
 
-const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike }) => {
+const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike, showRemove  }) => {
   return (
     <div className={s.item}>
       <div className={s.header}>
-        {image && <img src={image} alt="avatar" className={s.avatar} />}
+        <img
+          src={image}
+          alt="avatar"
+          className={s.avatar}
+          onError={(e) => { e.target.src = '/fallback_avatar.png'; }}
+        />
         <strong>{authorName}</strong>
       </div>
       <p>{message}</p>
@@ -14,7 +19,9 @@ const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, on
         <button className={s.likeButton} onClick={onLike}>
           {isLiked ? '❤️' : '🤍'} Like ({likes})
         </button>
-        <button className={s.removeButton} onClick={onRemove}>Remove</button>
+        {showRemove && (
+          <button className={s.removeButton} onClick={onRemove}>Remove</button>
+        )}
       </div>
     </div>
   );

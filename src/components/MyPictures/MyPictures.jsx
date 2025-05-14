@@ -1,17 +1,26 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Masonry, CellMeasurer, CellMeasurerCache, AutoSizer } from "react-virtualized";
 import createCellPositioner from "react-virtualized/dist/es/Masonry/createCellPositioner";
 import s from "./MyPictures.module.css";
-import { ImagesContext } from "../../context/ImagesContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc, getDoc, collection, query, where, onSnapshot,
+  addDoc, serverTimestamp
+} from "firebase/firestore";
 import { storage, db, auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const MyPictures = () => {
+const MyPictures = ({ userId }) => {
   const navigate = useNavigate();
+  const [authUser] = useAuthState(auth);
+  const isOwner = authUser?.uid === userId;
+
   const [userImages, setUserImages] = useState([]);
+  const [newImageFile, setNewImageFile] = useState(null);
+  const [description, setDescription] = useState("");
+  const [uploading, setUploading] = useState(false);
+
   const cache = useRef(
     new CellMeasurerCache({
       defaultHeight: 250,
@@ -19,19 +28,12 @@ const MyPictures = () => {
       fixedWidth: true,
     })
   );
-
   const masonryRef = useRef(null);
-  const { images, setImages } = useContext(ImagesContext);
-  const [user] = useAuthState(auth);
-
-  const [newImageFile, setNewImageFile] = useState(null);
-  const [description, setDescription] = useState("");
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
-    const q = query(collection(db, "pictures"), where("ownerId", "==", user.uid));
+    const q = query(collection(db, "pictures"), where("ownerId", "==", userId));
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const fetchedImages = await Promise.all(snapshot.docs.map(async (docSnap) => {
         const imageData = docSnap.data();
@@ -44,7 +46,7 @@ const MyPictures = () => {
           src: imageData.imageUrl,
           description: imageData.description || "",
           ownerId: imageData.ownerId,
-          ownerName: `${ownerData.name} ${ownerData.lastname}`,
+          ownerName: `${ownerData.name || ''} ${ownerData.lastname || ''}`,
           ownerAvatar: ownerData.avatarUrl || '',
         };
       }));
@@ -55,7 +57,7 @@ const MyPictures = () => {
     });
 
     return () => unsubscribe();
-  }, [user, setUserImages]);
+  }, [userId]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -69,16 +71,16 @@ const MyPictures = () => {
   };
 
   const addImage = async () => {
-    if (!newImageFile || !user) return;
+    if (!newImageFile || !authUser) return;
 
     setUploading(true);
     try {
-      const imageRef = ref(storage, `pictures/${user.uid}/${Date.now()}_${newImageFile.name}`);
+      const imageRef = ref(storage, `pictures/${authUser.uid}/${Date.now()}_${newImageFile.name}`);
       await uploadBytes(imageRef, newImageFile);
       const imageUrl = await getDownloadURL(imageRef);
 
       await addDoc(collection(db, "pictures"), {
-        ownerId: user.uid,
+        ownerId: authUser.uid,
         imageUrl,
         description,
         createdAt: serverTimestamp(),
@@ -91,15 +93,6 @@ const MyPictures = () => {
     } finally {
       setUploading(false);
     }
-  };
-
-  const removeImage = (id) => {
-    setImages((prev) => {
-      const updated = prev.filter((image) => image.id !== id);
-      cache.current.clearAll();
-      masonryRef.current?.clearCellPositions();
-      return updated;
-    });
   };
 
   const handleImageClick = (image) => {
@@ -127,37 +120,52 @@ const MyPictures = () => {
               onClick={() => handleImageClick(image)}
               style={{ cursor: "pointer" }}
             />
-            <button className={s.removeButton} onClick={() => removeImage(image.id)}>
-              Remove
-            </button>
+            {isOwner && (
+              <button className={s.removeButton} onClick={() => removeImage(image.id)}>
+                Remove
+              </button>
+            )}
           </div>
         </div>
       </CellMeasurer>
     );
   };
 
+  const removeImage = (id) => {
+    setUserImages((prev) => {
+      const updated = prev.filter((image) => image.id !== id);
+      cache.current.clearAll();
+      masonryRef.current?.clearCellPositions();
+      return updated;
+    });
+  };
+
   return (
     <div className={s.mypictures}>
-      <p className={s.title}>Add New Picture</p>
-      <textarea
-        className={s.textarea}
-        placeholder="Enter picture description here ..."
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <br />
-      <input
-        type="file"
-        className={s.fileInput}
-        onChange={handleImageUpload}
-        aria-label="upload file"
-        accept="image/*"
-      />
-      <button className={s.addButton} onClick={addImage} disabled={uploading || !newImageFile}>
-        {uploading ? "Uploading..." : "Add"}
-      </button>
+      {isOwner && (
+        <>
+          <p className={s.title}>Add New Picture</p>
+          <textarea
+            className={s.textarea}
+            placeholder="Enter picture description here ..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <br />
+          <input
+            type="file"
+            className={s.fileInput}
+            onChange={handleImageUpload}
+            aria-label="upload file"
+            accept="image/*"
+          />
+          <button className={s.addButton} onClick={addImage} disabled={uploading || !newImageFile}>
+            {uploading ? "Uploading..." : "Add"}
+          </button>
+        </>
+      )}
 
-      <h1>Your gallery</h1>
+      <h1>{isOwner ? "Your gallery" : "User's gallery"}</h1>
       <div className={s.gallery}>
         <AutoSizer>
           {({ width, height }) => (
@@ -183,14 +191,12 @@ function CellPositioner(cache, width) {
   const gutterSize = 20;
   const columnCount = Math.floor(width / (columnWidth + gutterSize));
 
-  const positionerConfig = {
+  return createCellPositioner({
     cellMeasurerCache: cache,
     columnCount,
     columnWidth,
     spacer: gutterSize,
-  };
-
-  return createCellPositioner(positionerConfig);
+  });
 }
 
 export default MyPictures;

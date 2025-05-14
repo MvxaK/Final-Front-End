@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Profile from './components/Profile/Profile';
-import Users from './components/Users/Users';
+import AllUsers from './components/Users/Users';
 import PictureDetails from './components/PictureDetails/PictureDetails';
 import AllPictures from './components/AllPictures/AllPictures';
 import { ImagesProvider } from "./context/ImagesContext";
@@ -32,7 +32,7 @@ const App = () => {
             path="/users" 
             element={
               <ProtectedRoute>
-                <Users />
+                <AllUsers />
               </ProtectedRoute>
             } 
           />
@@ -45,7 +45,7 @@ const App = () => {
             } 
           />
           <Route 
-            path="/main" 
+            path="/" 
             element={
               <ProtectedRoute>
                 <AllPictures />
