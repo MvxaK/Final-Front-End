@@ -9,7 +9,7 @@ const UserCard = ({ id, avatar, name, description }) => {
         <img src={avatar} alt="avatar" className={s.avatar} />
       </Link>
       <div className={s.info}>
-        <p className={s.name}>{name}</p>
+        <p className={s.name}>Name: {name}</p>
         <p className={s.descriptionTitle}>Status: 
           <p className={s.description}>{description}</p>
         </p>

@@ -46,6 +46,12 @@
     margin: 0;
 }
 
+.imageTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
 .descriptionTitle {
     font-size: 20px;
     font-weight: bold;

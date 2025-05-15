@@ -1,12 +1,70 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  background: #1b2a38;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #e0e0e0;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
-input,
-textarea,
-button {
+.form h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.form input,
+.form textarea {
   padding: 10px;
   font-size: 1rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #2a3b4d;
+  color: #e0e0e0;
+  outline: none;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border-color: #007bff;
+}
+
+.form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form button {
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form button[type='submit'] {
+  background-color: #007bff;
+  color: white;
+}
+
+.form button[type='submit']:hover {
+  background-color: #0056b3;
+}
+
+.form button[type='button'] {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.form button[type='button']:hover {
+  background-color: #c0392b;
 }

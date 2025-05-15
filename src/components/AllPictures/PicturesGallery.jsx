@@ -11,7 +11,8 @@ const PicturesGallery = () => {
   const navigate = useNavigate();
 
   const filteredImages = allImages.filter((img) =>
-    img.description.toLowerCase().includes(search.toLowerCase())
+    img.description.toLowerCase().includes(search.toLowerCase()) ||
+    img.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleImageClick = (image) => {
@@ -65,6 +66,7 @@ const PicturesGallery = () => {
               onClick={() => handleImageClick(image)}
               style={{ cursor: "pointer" }}
             />
+            <p className={s.imageTitle}>{image.title}</p>
             <p className={s.imageDescription}>{image.description}</p>
           </div>
         </div>

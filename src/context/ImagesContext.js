@@ -21,20 +21,20 @@ export const ImagesContext = createContext();
 export const ImagesProvider = ({ children }) => {
   const [firebaseImages, setFirebaseImages] = useState([]);
   const staticImages = [
-          { id: 1, src: picture1, description: "Nature and bridge" },
-          { id: 2, src: picture2, description: "Beautiful mountain" },
-          { id: 3, src: picture3, description: "Land and sun" },
-          { id: 4, src: picture4, description: "Forest with sun light" },
-          { id: 5, src: picture5, description: "Plant with sun" },
-          { id: 6, src: picture6, description: "Mountain forest" },
-          { id: 7, src: picture7, description: "Mountain forest" },
-          { id: 8, src: picture8, description: "Mountain forest" },
-          { id: 9, src: picture9, description: "Mountain forest" },
-          { id: 10, src: picture10, description: "Mountain forest" },
-          { id: 11, src: picture11, description: "Mountain forest" },
-          { id: 12, src: picture12, description: "Mountain forest" },
-          { id: 13, src: picture13, description: "Mountain forest" },
-          { id: 14, src: picture14, description: "Mountain forest" },
+          { id: 1, src: picture1, title: "Nature and bridge", description: "Nature and bridge" },
+          { id: 2, src: picture2, title: "Beautiful mountain", description: "Beautiful mountain" },
+          { id: 3, src: picture3, title: "Land and sun", description: "Land and sun" },
+          { id: 4, src: picture4, title: "Forest with sun light", description: "Forest with sun light" },
+          { id: 5, src: picture5, title: "Plant with sun", description: "Plant with sun" },
+          { id: 6, src: picture6, title: "Mountain forest", description: "Mountain forest" },
+          { id: 7, src: picture7, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 8, src: picture8, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 9, src: picture9, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 10, src: picture10, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 11, src: picture11, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 12, src: picture12, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 13, src: picture13, title: "Nature and bridge", description: "Mountain forest" },
+          { id: 14, src: picture14, title: "Nature and bridge", description: "Mountain forest" },
       ];
 
   useEffect(() => {
@@ -45,7 +45,6 @@ export const ImagesProvider = ({ children }) => {
           const data = docSnap.data();
           let ownerData = {};
           
-          // Безопасная проверка
           if (data.ownerId) {
             try {
               const ownerSnap = await getDoc(doc(db, "users", data.ownerId));
@@ -60,6 +59,7 @@ export const ImagesProvider = ({ children }) => {
           return {
             id: docSnap.id,
             src: data.imageUrl,
+            title: data.title || "",
             description: data.description || "",
             ownerId: data.ownerId || "",
             ownerName: `${ownerData.name || ""} ${ownerData.lastname || ""}`.trim(),

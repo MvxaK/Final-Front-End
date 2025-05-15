@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../../firebase';
+import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes, deleteObject } from 'firebase/storage';
 import s from './ProfileEditForm.module.css';
 
@@ -10,6 +11,8 @@ const ProfileEditForm = ({ user, onUpdate, onClose }) => {
   const [status, setStatus] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,15 +33,22 @@ const ProfileEditForm = ({ user, onUpdate, onClose }) => {
     e.preventDefault();
     setLoading(true);
 
+    const auth = getAuth();
+
     try {
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
       let photoURL = null;
 
+      if (currentPassword && newPassword) {
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPassword);
+      }
+
       if (avatarFile && userSnap.exists()) {
         const existingData = userSnap.data();
         const oldAvatarUrl = existingData.avatarUrl;
-
         if (oldAvatarUrl) {
           try {
             const path = decodeURIComponent(oldAvatarUrl.split('/o/')[1].split('?')[0]);
@@ -71,8 +81,16 @@ const ProfileEditForm = ({ user, onUpdate, onClose }) => {
       onUpdate();
       onClose();
     } catch (error) {
-      alert('Error when uploading: ' + error.message);
-      console.error('Error updating profile:', error);
+      if (error.code === 'auth/wrong-password') {
+        alert('Incorrect current password.');
+      } else if (error.code === 'auth/weak-password') {
+        alert('New password is too weak (minimum 6 characters).');
+      } else if (error.code === 'auth/requires-recent-login') {
+        alert('Please log out and log in again to change your password.');
+      } else {
+        alert('Error: ' + error.message);
+      }
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -99,6 +117,18 @@ const ProfileEditForm = ({ user, onUpdate, onClose }) => {
         placeholder="Status"
         value={status}
         onChange={(e) => setStatus(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Current password"
+        value={currentPassword}
+        onChange={(e) => setCurrentPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="New password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
       />
       <input
         type="file"

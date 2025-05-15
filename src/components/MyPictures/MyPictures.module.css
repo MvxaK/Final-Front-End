@@ -10,9 +10,25 @@
 }
 
 .imagePost {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.overlayTop {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 0;
+}
+
+.imageTitle {
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
 }
 
 .uploadedImage {
@@ -25,6 +41,17 @@
 
 .uploadedImage:hover {
     transform: scale(1.05);
+}
+
+.input {
+    margin: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #2a3b4d;
+    color: #e0e0e0;
+    outline: none;
 }
 
 .removeButton{

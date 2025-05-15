@@ -7,10 +7,7 @@ import { db } from "../../firebase";
 
 const PictureDetails = () => {
   const location = useLocation();
-  const { imageSrc, description, ownerId } = location.state || {};
-
-  console.log("location.state:", location.state);
-  console.log("ownerId:", ownerId);
+  const { imageSrc, title, description, ownerId } = location.state || {};
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -90,8 +87,8 @@ const PictureDetails = () => {
               {userInfo.name} {userInfo.lastname}
             </h2>
           </div>
-          <h3 className={s.descriptionTitle}>Description:</h3>
-          <p className={s.description}>{description}</p>
+          <h2 className={s.imageTitle}>Title: {title}</h2>
+          <p className={s.description}>Description: {description}</p>
 
           <button className={s.downloadButton} onClick={handleDownload}>
             Download Photo

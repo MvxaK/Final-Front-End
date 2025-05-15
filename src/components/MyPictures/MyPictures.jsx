@@ -20,6 +20,7 @@ const MyPictures = ({ userId }) => {
   const [newImageFile, setNewImageFile] = useState(null);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [title, setTitle] = useState("");
 
   const cache = useRef(
     new CellMeasurerCache({
@@ -44,6 +45,7 @@ const MyPictures = ({ userId }) => {
         return {
           id: docSnap.id,
           src: imageData.imageUrl,
+           title: imageData.title || "",
           description: imageData.description || "",
           ownerId: imageData.ownerId,
           ownerName: `${ownerData.name || ''} ${ownerData.lastname || ''}`,
@@ -82,6 +84,7 @@ const MyPictures = ({ userId }) => {
       await addDoc(collection(db, "pictures"), {
         ownerId: authUser.uid,
         imageUrl,
+        title,
         description,
         createdAt: serverTimestamp(),
       });
@@ -99,6 +102,7 @@ const MyPictures = ({ userId }) => {
     navigate(`/picture/${image.id}`, {
       state: {
         imageSrc: image.src,
+        title: image.title,
         description: image.description,
         ownerId: image.ownerId,
       },
@@ -120,6 +124,9 @@ const MyPictures = ({ userId }) => {
               onClick={() => handleImageClick(image)}
               style={{ cursor: "pointer" }}
             />
+            <div className={s.overlayTop}>
+              <p className={s.imageTitle}>{image.title}</p>
+            </div>
             {isOwner && (
               <button className={s.removeButton} onClick={() => removeImage(image.id)}>
                 Remove
@@ -145,6 +152,14 @@ const MyPictures = ({ userId }) => {
       {isOwner && (
         <>
           <p className={s.title}>Add New Picture</p>
+          <input
+            type="text"
+            className={s.input}
+            placeholder="Enter picture title here ..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <br />
           <textarea
             className={s.textarea}
             placeholder="Enter picture description here ..."
