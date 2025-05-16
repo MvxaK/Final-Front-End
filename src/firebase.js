@@ -26,32 +26,14 @@ const storage = getStorage(app);
 const saveUserToFirestore = async (user) => {
   const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
-  
-  if (userSnap.exists()) {
-    const currentData = userSnap.data();
-    const updates = {};
-    
-    if (user.displayName) {
-      const [firstName, lastName] = user.displayName.split(' ');
-      if (currentData.name !== firstName) updates.name = firstName;
-      if (currentData.lastname !== lastName) updates.lastname = lastName;
-    }
-    
-    if (user.photoURL && currentData.avatarUrl !== user.photoURL) {
-      updates.avatarUrl = user.photoURL;
-    }
-    
-    if (Object.keys(updates).length > 0) {
-      await updateDoc(userRef, updates);
-    }
-  } else {
-    const [firstName, lastName] = user.displayName.split(' ');
+
+  if (!userSnap.exists()) {
     await setDoc(userRef, {
       uid: user.uid,
       email: user.email,
-      name: firstName,
-      lastname: lastName,
-      avatarUrl: user.photoURL || "",
+      name: "",
+      lastname: "",
+      avatarUrl: "",
       createdAt: new Date(),
     });
   }

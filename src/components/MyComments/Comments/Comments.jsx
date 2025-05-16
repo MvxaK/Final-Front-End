@@ -2,6 +2,7 @@ import React from 'react';
 import s from './Comments.module.css';
 
 const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike, showRemove  }) => {
+  
   return (
     <div className={s.item}>
       <div className={s.header}>

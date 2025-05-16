@@ -8,12 +8,14 @@ import { getAuth, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import ProfileEditForm from './ProfileEditForm/ProfileEditForm';
+import NotificationsModal from './Notifications/NotificationsModal';
 
 const Profile = () => {
   const { userId } = useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -66,16 +68,19 @@ const Profile = () => {
         <img className={s.avatar} src={avatarUrl || defaultAvatar} alt="Profile avatar" />
         <div className={s.profileInfo}>
           <h2>{`${name || 'Unnamed'} ${lastname || ''}`}</h2>
-          <p>{status || ''}</p>
+          <p>Status: {status || ''}</p>
 
           {isOwner && (
             <>
+              <button onClick={() => setShowNotifications(true)}>Notifications</button>
+              <br />
               <button className={s.messageButton} onClick={() => setEditing(true)}>Edit profile</button>
               <br />
               <button className={s.logoutButton} onClick={handleLogout}>Logout</button>
             </>
           )}
         </div>
+        
       </div>
 
       {editing && isOwner && (
@@ -85,6 +90,13 @@ const Profile = () => {
           onClose={() => setEditing(false)}
         />
       )}
+      {showNotifications && isOwner && (
+        <NotificationsModal
+          userId={userId}
+          onClose={() => setShowNotifications(false)}
+        />
+      )}
+      
 
       <MyPictures userId={userId} />
       <MyComments

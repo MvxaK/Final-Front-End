@@ -54,23 +54,37 @@
     outline: none;
 }
 
-.removeButton{
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+.removeButton {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
-.imagePost:hover .removeButton {
-    opacity: 1;
+.editButton {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: #4d85ff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.imagePost:hover .removeButton,
+.imagePost:hover .editButton {
+  opacity: 1;
 }
 
 .addButton {
@@ -86,6 +100,7 @@
 .addButton:hover {
     background-color: #0056b3;
 }
+
 .fileInput{
     margin: 10px;
 }

@@ -2,14 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Masonry, CellMeasurer, CellMeasurerCache, AutoSizer } from "react-virtualized";
 import createCellPositioner from "react-virtualized/dist/es/Masonry/createCellPositioner";
-import s from "./MyPictures.module.css";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {
-  doc, getDoc, collection, query, where, onSnapshot,
-  addDoc, serverTimestamp
-} from "firebase/firestore";
+import { uploadBytes, getDownloadURL, ref as storageRef, deleteObject } from "firebase/storage";
+import { doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { storage, db, auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import s from "./MyPictures.module.css";
+import EditPicture from "../MyPictures/EditPicture/EditPicture";
 
 const MyPictures = ({ userId }) => {
   const navigate = useNavigate();
@@ -21,6 +19,8 @@ const MyPictures = ({ userId }) => {
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState("");
+  const [editingImage, setEditingImage] = useState(null);
+  const [masonryKey, setMasonryKey] = useState(Date.now());
 
   const cache = useRef(
     new CellMeasurerCache({
@@ -30,32 +30,38 @@ const MyPictures = ({ userId }) => {
     })
   );
   const masonryRef = useRef(null);
+  const positioner = useRef(null);
+  const lastColumnCount = useRef(0);
 
   useEffect(() => {
     if (!userId) return;
 
     const q = query(collection(db, "pictures"), where("ownerId", "==", userId));
     const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const fetchedImages = await Promise.all(snapshot.docs.map(async (docSnap) => {
-        const imageData = docSnap.data();
-        const ownerRef = doc(db, "users", imageData.ownerId);
-        const ownerSnap = await getDoc(ownerRef);
-        const ownerData = ownerSnap.exists() ? ownerSnap.data() : {};
+      const fetchedImages = await Promise.all(
+        snapshot.docs.map(async (docSnap) => {
+          const imageData = docSnap.data();
+          const ownerRef = doc(db, "users", imageData.ownerId);
+          const ownerSnap = await getDoc(ownerRef);
+          const ownerData = ownerSnap.exists() ? ownerSnap.data() : {};
 
-        return {
-          id: docSnap.id,
-          src: imageData.imageUrl,
-           title: imageData.title || "",
-          description: imageData.description || "",
-          ownerId: imageData.ownerId,
-          ownerName: `${ownerData.name || ''} ${ownerData.lastname || ''}`,
-          ownerAvatar: ownerData.avatarUrl || '',
-        };
-      }));
+          return {
+            id: docSnap.id,
+            src: imageData.imageUrl,
+            title: imageData.title || "",
+            description: imageData.description || "",
+            ownerId: imageData.ownerId,
+            ownerName: `${ownerData.name || ""} ${ownerData.lastname || ""}`,
+            ownerAvatar: ownerData.avatarUrl || "",
+          };
+        })
+      );
 
       setUserImages(fetchedImages);
       cache.current.clearAll();
       masonryRef.current?.clearCellPositions();
+      positioner.current = null;
+      setMasonryKey(Date.now());
     });
 
     return () => unsubscribe();
@@ -71,13 +77,13 @@ const MyPictures = ({ userId }) => {
       setNewImageFile(file);
     }
   };
-
+  
   const addImage = async () => {
     if (!newImageFile || !authUser) return;
 
     setUploading(true);
     try {
-      const imageRef = ref(storage, `pictures/${authUser.uid}/${Date.now()}_${newImageFile.name}`);
+      const imageRef = storageRef(storage, `pictures/${authUser.uid}/${Date.now()}_${newImageFile.name}`);
       await uploadBytes(imageRef, newImageFile);
       const imageUrl = await getDownloadURL(imageRef);
 
@@ -86,11 +92,13 @@ const MyPictures = ({ userId }) => {
         imageUrl,
         title,
         description,
+        imagePath: imageRef.fullPath,
         createdAt: serverTimestamp(),
       });
 
       setNewImageFile(null);
       setDescription("");
+      setTitle("");
     } catch (error) {
       alert("Error uploading image: " + error.message);
     } finally {
@@ -122,15 +130,20 @@ const MyPictures = ({ userId }) => {
               src={image.src}
               alt={image.description}
               onClick={() => handleImageClick(image)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", width: "100%" }}
             />
             <div className={s.overlayTop}>
               <p className={s.imageTitle}>{image.title}</p>
             </div>
             {isOwner && (
-              <button className={s.removeButton} onClick={() => removeImage(image.id)}>
-                Remove
-              </button>
+              <div className={s.ownerControls}>
+                <button className={s.editButton} onClick={() => setEditingImage(image)}>
+                  Edit
+                </button>
+                <button className={s.removeButton} onClick={() => removeImage(image.id)}>
+                  Remove
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -138,13 +151,29 @@ const MyPictures = ({ userId }) => {
     );
   };
 
-  const removeImage = (id) => {
-    setUserImages((prev) => {
-      const updated = prev.filter((image) => image.id !== id);
-      cache.current.clearAll();
-      masonryRef.current?.clearCellPositions();
-      return updated;
-    });
+  const removeImage = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this image?");
+    if (!confirmDelete) return;
+
+    try {
+      const docRef = doc(db, "pictures", id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const imageData = docSnap.data();
+
+        if (imageData.imagePath) {
+          const imgRef = storageRef(storage, imageData.imagePath);
+          await deleteObject(imgRef);
+        }
+
+        await deleteDoc(docRef);
+      }
+
+      setUserImages((prev) => prev.filter((image) => image.id !== id));
+    } catch (error) {
+      alert("Failed to delete: " + error.message);
+    }
   };
 
   return (
@@ -183,35 +212,40 @@ const MyPictures = ({ userId }) => {
       <h1>{isOwner ? "Your gallery" : "User's gallery"}</h1>
       <div className={s.gallery}>
         <AutoSizer>
-          {({ width, height }) => (
-            <Masonry
-              ref={masonryRef}
-              cellCount={userImages.length}
-              cellMeasurerCache={cache.current}
-              cellPositioner={CellPositioner(cache.current, width)}
-              cellRenderer={cellRenderer}
-              height={height}
-              width={width}
-              overscanByPixels={1}
-            />
-          )}
+          {({ width, height }) => {
+            const columnWidth = 300;
+            const gutterSize = 20;
+            const columnCount = Math.max(Math.floor(width / (columnWidth + gutterSize)), 1);
+
+            if (!positioner.current || lastColumnCount.current !== columnCount) {
+              positioner.current = createCellPositioner({
+                cellMeasurerCache: cache.current,
+                columnCount,
+                columnWidth,
+                spacer: gutterSize,
+              });
+              lastColumnCount.current = columnCount;
+            }
+
+            return (
+              <Masonry
+                key={masonryKey}
+                ref={masonryRef}
+                cellCount={userImages.length}
+                cellMeasurerCache={cache.current}
+                cellPositioner={positioner.current}
+                cellRenderer={cellRenderer}
+                height={height}
+                width={width}
+                overscanByPixels={300}
+              />
+            );
+          }}
         </AutoSizer>
       </div>
+      {editingImage && <EditPicture picture={editingImage} onClose={() => setEditingImage(null)} />}
     </div>
   );
 };
-
-function CellPositioner(cache, width) {
-  const columnWidth = 300;
-  const gutterSize = 20;
-  const columnCount = Math.floor(width / (columnWidth + gutterSize));
-
-  return createCellPositioner({
-    cellMeasurerCache: cache,
-    columnCount,
-    columnWidth,
-    spacer: gutterSize,
-  });
-}
 
 export default MyPictures;

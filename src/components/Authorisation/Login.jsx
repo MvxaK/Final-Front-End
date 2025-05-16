@@ -44,6 +44,9 @@ const Login = () => {
         <button type="button" onClick={() => navigate('/register')}>
           Create new account
         </button>
+        <button type="button" onClick={() => navigate('/reset-password')}>
+          Forget password?
+        </button>
       </form>
     </div>
   );

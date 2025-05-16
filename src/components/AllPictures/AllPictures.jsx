@@ -8,10 +8,15 @@ const AllPictures = () => {
   const { allImages  } = useContext(ImagesContext);
   const [search, setSearch] = useState("");
 
+  const filteredImages = allImages.filter((img) =>
+    img.description.toLowerCase().includes(search.toLowerCase()) ||
+    img.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className={s.allpictures}>
       <SearchBar search={search} setSearch={setSearch} />
-      <PicturesGallery images={allImages} />
+      <PicturesGallery images={filteredImages} />
     </div>
   );
 };

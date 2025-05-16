@@ -1,17 +1,29 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { auth } from './firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const ProtectedRoute = ({ children }) => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, setUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const location = useLocation();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      setUser(user);
+      setCheckingAuth(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (checkingAuth) return null;
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    if (location.pathname === '/about') {
+      return children;
+    } else {
+      return <Navigate to="/register" state={{ from: location }} replace />;
+    }
   }
 
   return children;

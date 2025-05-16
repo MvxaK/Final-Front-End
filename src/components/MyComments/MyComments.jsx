@@ -45,18 +45,29 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
     if (!newComment.trim() || !user) return;
 
     try {
-      await addDoc(collection(db, 'comments'), {
+      const docRef = await addDoc(collection(db, 'comments'), {
         profileId,
         authorId: user.uid,
         message: newComment.trim(),
         createdAt: serverTimestamp(),
         likes: {}
       });
+
+      await addDoc(collection(db, 'users', profileId, 'notifications'), {
+        fromUserId: user.uid,
+        type: 'comment',
+        commentId: docRef.id,
+        isRead: false,
+        message: `${user.displayName || "Someone"} commented on your profile`,
+        createdAt: serverTimestamp()
+      });
+
       setNewComment('');
     } catch (err) {
       console.error("Failed to add comment:", err);
     }
   };
+
 
   const removeComment = async (id, authorId) => {
     if (!user || (authorId !== user.uid && profileId !== user.uid)) return;
@@ -77,6 +88,21 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
       delete updatedLikes[user.uid];
     } else {
       updatedLikes[user.uid] = true;
+
+      if (user.uid !== comment.authorId) {
+        try {
+          await addDoc(collection(db, 'users', comment.authorId, 'notifications'), {
+            fromUserId: user.uid,
+            type: 'like',
+            commentId: comment.id,
+            isRead: false,
+            message: `${user.displayName || "Someone"} liked your comment`,
+            createdAt: serverTimestamp()
+          });
+        } catch (err) {
+          console.error('Failed to add like notification:', err);
+        }
+      }
     }
 
     try {
