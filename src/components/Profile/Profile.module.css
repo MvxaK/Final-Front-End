@@ -1,17 +1,18 @@
 .profile {
-  background: #1b2a38;
   border-radius: 15px;
   padding: 20px;
   margin: 50px auto;
   width: 100%;
   max-width: 100%;
-  color: #e0e0e0;
+  background: var(--modal-bg);
+  color: var(--text-color);
   box-sizing: border-box;
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
+  padding: 150p;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #007bff;
@@ -29,30 +30,64 @@
   flex-direction: column;
 }
 
-.messageButton {
-  background-color: #007bff;
-  color: white;
+.messageButton,
+.logoutButton,
+.notificationButton {
+  background-color: var(--primary-color);
+  color: var(--text-color);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
   transition: 0.3s;
-}
-
-.messageButton:hover {
-  background-color: #0056b3;
+  font-size: 1rem;
 }
 
 .logoutButton {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
+  background-color: var(--danger-color);
+}
+
+.messageButton:hover,
+.notificationButton:hover {
+  background-color: #0056b3;
 }
 
 .logoutButton:hover {
-  background-color: #c0392b;
+  background-color: var(--danger-hover);
+}
+
+.notificationsButtonActive {
+  background-color: var(--danger-color);
+  font-weight: bold;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .profileHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .avatar {
+    margin: 15px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .messageButton,
+  .logoutButton,
+  .notificationButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .buttonGroup {
+    width: 100%;
+  }
 }

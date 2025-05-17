@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Comments.module.css';
 
-const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike, showRemove  }) => {
+const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike, showRemove, onAvatarClick  }) => {
   
   return (
     <div className={s.item}>
@@ -10,6 +10,7 @@ const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, on
           src={image}
           alt="avatar"
           className={s.avatar}
+          onClick={onAvatarClick}
           onError={(e) => { e.target.src = '/fallback_avatar.png'; }}
         />
         <strong>{authorName}</strong>

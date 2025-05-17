@@ -1,13 +1,24 @@
 .item {
-  color: #e0e0e0;
-  background: #2c3e50;
+  color: var(--text-color);
+  background: var(--modal-bg);
   padding: 10px;
   border-radius: 10px;
   margin-top: 10px;
-  border: 2px solid #007bff;
+  border: 2px solid var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
+}
+
+.avatar {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
 }
 
 .item img {
@@ -15,7 +26,7 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #f1c40f;
+  border: 2px solid var(--warning-color);
 }
 
 .actions {
@@ -24,8 +35,8 @@
 }
 
 .likeButton {
-  background-color: #00b012;
-  color: white;
+  background-color: var(--success-color);
+  color: var(--text-color);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
@@ -34,12 +45,12 @@
 }
 
 .likeButton:hover {
-  background-color: #007a0c;
+  background-color: var(--success-hover);
 }
 
 .removeButton {
-  background-color: #ff4d4d;
-  color: white;
+  background-color: var(--danger-color);
+  color: var(--text-color);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
@@ -48,5 +59,25 @@
 }
 
 .removeButton:hover {
-  background-color: #cc0000;
+  background-color: var(--danger-hover);
+}
+
+@media (max-width: 480px) {
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .likeButton,
+  .removeButton {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+  }
 }

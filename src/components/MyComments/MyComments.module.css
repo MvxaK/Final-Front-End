@@ -1,13 +1,13 @@
 .comments {
-  background: #273746;
+  background: var(--comment-color);
   padding: 15px;
   border-radius: 10px;
-  color: #f1c40f;
+  color: var(--warning-color);
 }
 
 .addButton {
-  background-color: #00a6ff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
@@ -21,10 +21,26 @@
 }
 
 textarea {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #007bff;
+  background: var(--comment-color);
+  border: 1px solid var(--primary-color);
   padding: 10px;
-  color: #e0e0e0;
+  color: var(--text-color);
   border-radius: 5px;
   outline: none;
+}
+
+@media (max-width: 480px) {
+  .comments {
+    padding: 10px;
+  }
+
+  textarea {
+    font-size: 0.95rem;
+  }
+
+  .addButton {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
 }

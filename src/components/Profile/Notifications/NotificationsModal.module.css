@@ -12,13 +12,13 @@
 }
 
 .modal {
-  background: #1b2a38;
+  background: var(--modal-bg);
   padding: 30px;
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
+  color: var(--text-color);
   box-sizing: border-box;
-  color: white;
 }
 
 h3 {
@@ -39,15 +39,15 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2a3b4d;
+  background-color: var(--input-bg);
   padding: 8px;
   border-radius: 8px;
   margin-bottom: 8px;
 }
 
 .notification button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
   border: none;
   padding: 5px 8px;
   border-radius: 5px;
@@ -55,7 +55,7 @@ h3 {
 }
 
 .notification button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
 }
 
 .buttons {
@@ -64,8 +64,8 @@ h3 {
 }
 
 .cancel {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--danger-color);
+  color: var(--text-color);
   border: none;
   padding: 10px;
   border-radius: 8px;
@@ -73,5 +73,31 @@ h3 {
 }
 
 .cancel:hover {
-  background-color: #c0392b;
+  background-color: var(--danger-hover);
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #ffffff73;
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 20px;
+  }
+
+  .notification {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .cancel {
+    width: 100%;
+    text-align: center;
+  }
 }

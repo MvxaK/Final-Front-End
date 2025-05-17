@@ -5,7 +5,7 @@ import MyPictures from '../MyPictures/MyPictures';
 import defaultAvatar from "../images/avatars/main_avatar.png";
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 import ProfileEditForm from './ProfileEditForm/ProfileEditForm';
 import NotificationsModal from './Notifications/NotificationsModal';
@@ -15,6 +15,7 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [hasNotifications, setHasNotifications] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -52,15 +53,18 @@ const Profile = () => {
       .catch((error) => console.error("Error:", error));
   };
 
-  if (loading) {
-    return <div>Loading profile...</div>;
-  }
+    useEffect(() => {
+    const checkNotifications = async () => {
+      const snapshot = await getDocs(collection(db, 'users', userId, 'notifications'));
+      setHasNotifications(!snapshot.empty);
+    };
 
-  if (!userData) {
-    return <div>User not found or data loading failed.</div>;
-  }
+    if (userId && isOwner) {
+      checkNotifications();
+    }
+  }, [userId]);
 
-  const { name, lastname, avatarUrl, status } = userData;
+  const { name = '', lastname = '', avatarUrl = '', status = '' } = userData || {};
 
   return (
     <div className={s.profile}>
@@ -69,18 +73,21 @@ const Profile = () => {
         <div className={s.profileInfo}>
           <h2>{`${name || 'Unnamed'} ${lastname || ''}`}</h2>
           <p>Status: {status || ''}</p>
-
-          {isOwner && (
+        </div>
+        {isOwner && (
             <>
-              <button onClick={() => setShowNotifications(true)}>Notifications</button>
-              <br />
-              <button className={s.messageButton} onClick={() => setEditing(true)}>Edit profile</button>
-              <br />
-              <button className={s.logoutButton} onClick={handleLogout}>Logout</button>
+              <div className={s.buttonGroup}>
+                <button
+                  onClick={() => setShowNotifications(true)}
+                  className={`${s.notificationButton} ${hasNotifications ? s.notificationsButtonActive : ''}`}
+                >
+                  Notifications
+                </button>
+                <button className={s.messageButton} onClick={() => setEditing(true)}>Edit profile</button>
+                <button className={s.logoutButton} onClick={handleLogout}>Logout</button>
+              </div>
             </>
           )}
-        </div>
-        
       </div>
 
       {editing && isOwner && (

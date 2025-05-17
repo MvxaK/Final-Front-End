@@ -2,18 +2,24 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import s from "./Navbar.module.css";
 import { getAuth } from "firebase/auth";
+import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid;
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
-  // Текущий путь
   const currentPath = location.pathname;
 
   return (
     <div className={s.nav}>
       <div className={s.menu}>
+        <button onClick={toggleTheme} className={s.buttonLink}>
+          {theme === 'dark' && 'Light'}
+          {theme === 'light' && 'Special'}
+          {theme === 'accessible' && 'Dark'}
+        </button>
         <div className={`${s.item} ${currentPath === `/profile/${userId}` ? s.active : ""}`}>
           <Link to={`/profile/${userId}`}>Profile</Link>
         </div>

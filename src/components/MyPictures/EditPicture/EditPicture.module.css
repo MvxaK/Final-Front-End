@@ -12,19 +12,20 @@
 }
 
 .modal {
-  background: #1b2a38;
+  background: var(--modal-bg);
   padding: 30px;
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
   box-sizing: border-box;
+  color: var(--text-color);
 }
 
 .modal h3 {
   margin-bottom: 10px;
   text-align: center;
   font-size: 1.5rem;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .modal input,
@@ -32,17 +33,17 @@
   width: 100%;
   padding: 10px;
   font-size: 1rem;
-  border: 1px solid #333;
+  border: 1px solid var(--input-border);
   border-radius: 8px;
-  background-color: #2a3b4d;
-  color: #e0e0e0;
+  background-color: var(--input-bg);
+  color: var(--text-color);
   outline: none;
   margin-bottom: 10px;
 }
 
 .modal input:focus,
 .modal textarea:focus {
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 .modal textarea {
@@ -67,19 +68,44 @@
 }
 
 .buttons .save {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
 }
 
 .buttons .save:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
 }
 
 .buttons .cancel {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--danger-color);
+  color: var(--text-color);
 }
 
 .buttons .cancel:hover {
-  background-color: #c0392b;
+  background-color: var(--danger-hover);
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 20px;
+  }
+
+  .modal h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal input,
+  .modal textarea {
+    font-size: 0.95rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .buttons button {
+    width: 100%;
+    font-size: 0.95rem;
+  }
 }

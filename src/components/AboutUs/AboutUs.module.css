@@ -26,18 +26,18 @@
 }
 
 .about_text {
-  background-color: #2a2a2a;
+  background: var(--modal-bg);
   padding: 20px;
   border-radius: 10px;
   max-width: 100%;
   display: inline-block;
+  color: var(--text-color);
 }
 
 .about_title {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #fff;
 }
 
 .about_paragraph {
@@ -58,15 +58,43 @@
 }
 
 .about_button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
-  transition: 0.3s;
+  transition: background-color 0.3s;
 }
 
 .about_button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
+}
+
+@media (max-width: 768px) {
+  .about_container {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .about_image {
+    max-width: 100%;
+  }
+
+  .about_img {
+    width: 100%;
+    width: 400px;
+    max-width: 320px;
+  }
+
+  .about_title {
+    font-size: 22px;
+  }
+
+  .about_paragraph,
+  .about_list,
+  .about_subtitle {
+    font-size: 14px;
+  }
 }

@@ -5,11 +5,13 @@ import { auth, db } from '../../firebase';
 import s from './MyComments.module.css';
 import Comments from './Comments/Comments';
 import defaultAvatar from '../images/avatars/main_avatar.png';
+import { useNavigate } from 'react-router-dom';
 
 export const MyComments = ({ profileId, profileImage, name, lastname }) => {
   const [user] = useAuthState(auth);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!profileId) return;
@@ -58,7 +60,6 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
         type: 'comment',
         commentId: docRef.id,
         isRead: false,
-        message: `${user.displayName || "Someone"} commented on your profile`,
         createdAt: serverTimestamp()
       });
 
@@ -67,7 +68,6 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
       console.error("Failed to add comment:", err);
     }
   };
-
 
   const removeComment = async (id, authorId) => {
     if (!user || (authorId !== user.uid && profileId !== user.uid)) return;
@@ -95,8 +95,8 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
             fromUserId: user.uid,
             type: 'like',
             commentId: comment.id,
+            profileId: profileId,
             isRead: false,
-            message: `${user.displayName || "Someone"} liked your comment`,
             createdAt: serverTimestamp()
           });
         } catch (err) {
@@ -113,7 +113,7 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
       console.error("Failed to update like:", err);
     }
   };
-
+  
   return (
     <div>
       <h3>Comments for {name} {lastname}</h3>
@@ -143,6 +143,7 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
             onRemove={() => removeComment(comment.id, comment.authorId)}
             onLike={() => toggleLike(comment)}
             showRemove={user && (comment.authorId === user.uid || profileId === user.uid)}
+            onAvatarClick={() => navigate(`/profile/${comment.authorId}`)}
           />
         ))}
       </div>

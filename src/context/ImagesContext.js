@@ -67,7 +67,44 @@ export const ImagesProvider = ({ children }) => {
           };
         })
       );
+
+      try {
+      const response = await fetch("https://api.thedogapi.com/v1/breeds", {
+        headers: {
+          "x-api-key": "live_wd0uTdKVHHpN72u0N60qoTocG7mp7c7rkTmoiuNxcGaCHHNJMWPGzqBOXitybFmE"
+        }
+      });
+      const dogBreeds = await response.json();
+
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      const uniqueBreedsByLetter = [];
+      for (const letter of alphabet) {
+        const breed = dogBreeds.find(
+          (b) =>
+            b.name &&
+            b.name.toUpperCase().startsWith(letter) &&
+            b.image &&
+            b.image.url
+        );
+
+        if (breed) {
+          uniqueBreedsByLetter.push({
+            id: `dog-${letter}`,
+            src: breed.image.url,
+            title: breed.name,
+            description: breed.temperament || "No description",
+            ownerId: null,
+            ownerName: "Dog software from thedogapi.com",
+            ownerAvatar: "",
+          });
+        }
+      }
+
+      setFirebaseImages([...allPictures, ...uniqueBreedsByLetter]);
+    } catch (error) {
+      console.error("Dog API fetch error:", error);
       setFirebaseImages(allPictures);
+    }
     };
 
     fetchImages();
@@ -78,9 +115,7 @@ export const ImagesProvider = ({ children }) => {
   const allImages = [...staticImages, ...firebaseImages];
 
   return (
-    <ImagesContext.Provider
-      value={{ staticImages, firebaseImages, setFirebaseImages, allImages }}
-    >
+    <ImagesContext.Provider value={{ staticImages, firebaseImages, setFirebaseImages, allImages }}>
       {children}
     </ImagesContext.Provider>
   );

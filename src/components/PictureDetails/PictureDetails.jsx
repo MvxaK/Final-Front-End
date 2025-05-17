@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import s from "./PictureDetails.module.css";
+import ThedogAvatar from "../images/avatars/thedogapi.jpg";
 import profileAvatar from "../images/avatars/main_avatar.png";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const PictureDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { imageSrc, title, description, ownerId } = location.state || {};
+  const isApiImage = imageSrc?.includes("thedogapi.com") || false;
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -17,6 +20,14 @@ const PictureDetails = () => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      if (isApiImage) {
+      setUserInfo({
+        name: "TheDogAPI",
+        lastname: "",
+        avatarUrl: ThedogAvatar,
+      });
+      return;
+    }
       if (!ownerId) {
         setUserInfo({
           name: "Amir",
@@ -72,6 +83,12 @@ const PictureDetails = () => {
     }
   };
 
+  const handleProfileClick = () => {
+    if (ownerId) {
+      navigate(`/profile/${ownerId}`);
+    }
+  };
+
   return (
     <div className={s.container}>
       <div className={s.content}>
@@ -82,6 +99,8 @@ const PictureDetails = () => {
               className={s.avatar}
               src={userInfo.avatarUrl}
               alt="User avatar"
+              onClick={handleProfileClick}
+              style={{ cursor: "pointer" }}
             />
             <h2 className={s.userName}>
               {userInfo.name} {userInfo.lastname}
@@ -90,9 +109,16 @@ const PictureDetails = () => {
           <h2 className={s.imageTitle}>Title: {title}</h2>
           <p className={s.description}>Description: {description}</p>
 
-          <button className={s.downloadButton} onClick={handleDownload}>
-            Download Photo
-          </button>
+          {!isApiImage && (
+            <button className={s.downloadButton} onClick={handleDownload}>
+              Download Photo
+            </button>
+          )}
+          {isApiImage && (
+            <p style={{ color: "gray", fontStyle: "italic" }}>
+              Download isn`t allowed due to security and law reasons.
+            </p>
+          )}
         </div>
       </div>
     </div>
