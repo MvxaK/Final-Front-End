@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
 import Profile from './components/Profile/Profile';
 import AllUsers from './components/Users/Users';
 import AboutUs from './components/AboutUs/AboutUs';
@@ -85,6 +86,7 @@ const App = () => {
               }
             />
           </Routes>
+          <Footer />
         </div>
       </ImagesProvider>
     </ThemeProvider>

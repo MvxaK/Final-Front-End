@@ -16,7 +16,7 @@ const EditPicture = ({ picture, onClose }) => {
         title,
         description,
       });
-      onClose(); // Закрыть модалку после сохранения
+      onClose();
     } catch (error) {
       alert("Failed to update: " + error.message);
     } finally {

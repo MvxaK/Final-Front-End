@@ -118,7 +118,6 @@ const NotificationsModal = ({ userId, onClose }) => {
           )}
         </div>
 
-
         <div className={s.buttons}>
           <button onClick={onClose} className={s.cancel}>Close</button>
         </div>

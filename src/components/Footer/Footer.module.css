@@ -1,0 +1,80 @@
+.footer {
+  background: var(--modal-bg);
+  color: var(--navbar-color);
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid var(--primary-color);
+  gap: 15px;
+  margin-top: auto;
+}
+
+.contactForm {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+
+.sendButton {
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sendButton:hover {
+  background-color: #0056b3;
+}
+
+.copySocial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 15px;
+}
+
+.socialIcons a {
+  color: var(--navbar-color);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.socialIcons a:hover {
+  color: var(--link-hover);
+}
+
+@media (max-width: 768px) {
+  .contactForm {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .messageInput,
+  .sendButton {
+    width: 100%;
+  }
+
+  .socialIcons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
