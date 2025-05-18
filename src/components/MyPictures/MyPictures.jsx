@@ -8,6 +8,7 @@ import { storage, db, auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import s from "./MyPictures.module.css";
 import EditPicture from "../MyPictures/EditPicture/EditPicture";
+import SearchBar from "../AllPictures/SearchBar";
 
 const MyPictures = ({ userId }) => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const MyPictures = ({ userId }) => {
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortOption, setSortOption] = useState("date-desc");
   const [editingImage, setEditingImage] = useState(null);
   const [masonryKey, setMasonryKey] = useState(Date.now());
 
@@ -35,7 +38,6 @@ const MyPictures = ({ userId }) => {
 
   useEffect(() => {
     if (!userId) return;
-
     const q = query(collection(db, "pictures"), where("ownerId", "==", userId));
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const fetchedImages = await Promise.all(
@@ -53,6 +55,7 @@ const MyPictures = ({ userId }) => {
             ownerId: imageData.ownerId,
             ownerName: `${ownerData.name || ""} ${ownerData.lastname || ""}`,
             ownerAvatar: ownerData.avatarUrl || "",
+            createdAt: imageData.createdAt?.toDate?.() || new Date(0),
           };
         })
       );
@@ -117,8 +120,28 @@ const MyPictures = ({ userId }) => {
     });
   };
 
+  const filteredImages = userImages
+  .filter((img) =>
+    img.description.toLowerCase().includes(search.toLowerCase()) ||
+    img.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .sort((a, b) => {
+    switch (sortOption) {
+       case "date-desc":
+        return b.createdAt - a.createdAt;
+      case "date-asc":
+        return a.createdAt - b.createdAt;
+      case "title-asc":
+        return a.title.localeCompare(b.title);
+      case "title-desc":
+        return b.title.localeCompare(a.title);
+      default:
+        return 0;
+    }
+  });
+
   const cellRenderer = ({ index, key, parent, style }) => {
-    const image = userImages[index];
+    const image = filteredImages[index];
     if (!image) return null;
 
     return (
@@ -208,7 +231,21 @@ const MyPictures = ({ userId }) => {
           </button>
         </>
       )}
-
+      <br></br>
+      <div className={s.searchDiv}>
+        <SearchBar search={search} setSearch={setSearch} />
+          <br />
+          <select
+            className={s.sortSelect}
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="date-desc">Newest first</option>
+            <option value="date-asc">Oldest first</option>
+            <option value="title-asc">Title A-Z</option>
+            <option value="title-desc">Title Z-A</option>
+          </select>
+      </div>
       <h1>{isOwner ? "Your gallery" : "User's gallery"}</h1>
       <div className={s.gallery}>
         <AutoSizer>
@@ -231,7 +268,7 @@ const MyPictures = ({ userId }) => {
               <Masonry
                 key={masonryKey}
                 ref={masonryRef}
-                cellCount={userImages.length}
+                cellCount={filteredImages.length}
                 cellMeasurerCache={cache.current}
                 cellPositioner={positioner.current}
                 cellRenderer={cellRenderer}

@@ -21,21 +21,25 @@ export const ImagesContext = createContext();
 export const ImagesProvider = ({ children }) => {
   const [firebaseImages, setFirebaseImages] = useState([]);
   const staticImages = [
-          { id: 1, src: picture1, title: "Nature and bridge", description: "Nature and bridge" },
-          { id: 2, src: picture2, title: "Beautiful mountain", description: "Beautiful mountain" },
-          { id: 3, src: picture3, title: "Land and sun", description: "Land and sun" },
-          { id: 4, src: picture4, title: "Forest with sun light", description: "Forest with sun light" },
-          { id: 5, src: picture5, title: "Plant with sun", description: "Plant with sun" },
-          { id: 6, src: picture6, title: "Mountain forest", description: "Mountain forest" },
-          { id: 7, src: picture7, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 8, src: picture8, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 9, src: picture9, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 10, src: picture10, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 11, src: picture11, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 12, src: picture12, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 13, src: picture13, title: "Nature and bridge", description: "Mountain forest" },
-          { id: 14, src: picture14, title: "Nature and bridge", description: "Mountain forest" },
-      ];
+    { id: 1, src: picture1, title: "Nature and bridge", description: "Nature and bridge" },
+    { id: 2, src: picture2, title: "Beautiful mountain", description: "Beautiful mountain" },
+    { id: 3, src: picture3, title: "Land and sun", description: "Land and sun" },
+    { id: 4, src: picture4, title: "Forest with sun light", description: "Forest with sun light" },
+    { id: 5, src: picture5, title: "Plant with sun", description: "Plant with sun" },
+    { id: 6, src: picture6, title: "Mountain forest", description: "Mountain forest" },
+    { id: 7, src: picture7, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 8, src: picture8, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 9, src: picture9, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 10, src: picture10, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 11, src: picture11, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 12, src: picture12, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 13, src: picture13, title: "Nature and bridge", description: "Mountain forest" },
+    { id: 14, src: picture14, title: "Nature and bridge", description: "Mountain forest" },
+  ];
+
+  function safeString(value) {
+    return typeof value === "string" ? value : "";
+  }
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -59,11 +63,12 @@ export const ImagesProvider = ({ children }) => {
           return {
             id: docSnap.id,
             src: data.imageUrl,
-            title: data.title || "",
-            description: data.description || "",
-            ownerId: data.ownerId || "",
-            ownerName: `${ownerData.name || ""} ${ownerData.lastname || ""}`.trim(),
-            ownerAvatar: ownerData.avatarUrl || "",
+            title: safeString(data.title),
+            description: safeString(data.description),
+            ownerId: safeString(data.ownerId),
+            ownerName: `${safeString(ownerData.name)} ${safeString(ownerData.lastname)}`.trim(),
+            ownerAvatar: safeString(ownerData.avatarUrl),
+            createdAt: data.createdAt?.toDate?.() || new Date(0),
           };
         })
       );
@@ -91,8 +96,8 @@ export const ImagesProvider = ({ children }) => {
           uniqueBreedsByLetter.push({
             id: `dog-${letter}`,
             src: breed.image.url,
-            title: breed.name,
-            description: breed.temperament || "No description",
+            title: safeString(breed.name),
+            description: safeString(breed.temperament) || "No description",
             ownerId: null,
             ownerName: "Dog software from thedogapi.com",
             ownerAvatar: "",

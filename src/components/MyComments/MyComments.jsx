@@ -55,13 +55,16 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
         likes: {}
       });
 
-      await addDoc(collection(db, 'users', profileId, 'notifications'), {
-        fromUserId: user.uid,
-        type: 'comment',
-        commentId: docRef.id,
-        isRead: false,
-        createdAt: serverTimestamp()
-      });
+      if (user.uid !== profileId) {
+        await addDoc(collection(db, 'users', profileId, 'notifications'), {
+          fromUserId: user.uid,
+          type: 'comment',
+          commentId: docRef.id,
+          profileId: profileId,
+          isRead: false,
+          createdAt: serverTimestamp()
+        });
+      }
 
       setNewComment('');
     } catch (err) {

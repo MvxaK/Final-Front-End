@@ -54,15 +54,39 @@ const Profile = () => {
   };
 
     useEffect(() => {
-    const checkNotifications = async () => {
-      const snapshot = await getDocs(collection(db, 'users', userId, 'notifications'));
-      setHasNotifications(!snapshot.empty);
-    };
+      const checkNotifications = async () => {
+        try {
+          const userRef = doc(db, 'users', userId);
+          const userSnap = await getDoc(userRef);
 
-    if (userId && isOwner) {
-      checkNotifications();
-    }
-  }, [userId]);
+          let prefs = { comments: true, likes: true };
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            if (data.notificationPrefs) {
+              prefs = data.notificationPrefs;
+            }
+          }
+
+          const snapshot = await getDocs(collection(db, 'users', userId, 'notifications'));
+          const rawNotifications = snapshot.docs.map(doc => doc.data());
+
+          const hasRelevantNotifications = rawNotifications.some(n => {
+            if (n.type === 'comment' && prefs.comments) return true;
+            if (n.type === 'like' && prefs.likes) return true;
+            return false;
+          });
+
+          setHasNotifications(hasRelevantNotifications);
+        } catch (error) {
+          console.error('Error checking notifications:', error);
+        }
+      };
+
+      if (userId && isOwner) {
+        checkNotifications();
+      }
+    }, [userId, isOwner, showNotifications]);
+
 
   const { name = '', lastname = '', avatarUrl = '', status = '' } = userData || {};
 

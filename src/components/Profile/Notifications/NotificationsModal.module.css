@@ -78,7 +78,7 @@ h3 {
 
 .timestamp {
   font-size: 0.75rem;
-  color: #ffffff73;
+  color: var(--text-color);
 }
 
 @media (max-width: 480px) {

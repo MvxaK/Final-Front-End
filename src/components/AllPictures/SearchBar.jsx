@@ -1,5 +1,5 @@
 import React from "react";
-import s from "./AllPictures.module.css";
+import s from "./SearchBar.module.css";
 
 const SearchBar = ({ search, setSearch }) => {
   return (

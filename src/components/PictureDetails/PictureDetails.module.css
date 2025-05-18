@@ -80,8 +80,13 @@
 
 @media (max-width: 768px) {
   .container {
+    margin: 100px auto ;
     padding: 20px;
     height: auto;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .content {

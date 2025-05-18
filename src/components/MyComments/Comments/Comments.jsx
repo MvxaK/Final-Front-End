@@ -5,25 +5,28 @@ const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, on
   
   return (
     <div className={s.item}>
-      <div className={s.header}>
-        <img
-          src={image}
-          alt="avatar"
-          className={s.avatar}
-          onClick={onAvatarClick}
-          onError={(e) => { e.target.src = '/fallback_avatar.png'; }}
-        />
-        <strong>{authorName}</strong>
-      </div>
-      <p>{message}</p>
-
-      <div className={s.actions}>
-        <button className={s.likeButton} onClick={onLike}>
-          {isLiked ? '❤️' : '🤍'} Like ({likes})
-        </button>
-        {showRemove && (
-          <button className={s.removeButton} onClick={onRemove}>Remove</button>
-        )}
+      <img
+        src={image}
+        alt="avatar"
+        className={s.avatar}
+        onClick={onAvatarClick}
+        onError={(e) => { e.target.src = '/fallback_avatar.png'; }}
+      />
+      <div className={s.contentWrapper}>
+        <div className={s.content}>
+          <div className={s.header}>
+            <strong>{authorName}</strong>
+          </div>
+          <p>{message}</p>
+        </div>
+        <div className={s.actions}>
+          <button className={s.likeButton} onClick={onLike}>
+            {isLiked ? '❤️' : '🤍'} Like ({likes})
+          </button>
+          {showRemove && (
+            <button className={s.removeButton} onClick={onRemove}>Remove</button>
+          )}
+        </div>
       </div>
     </div>
   );

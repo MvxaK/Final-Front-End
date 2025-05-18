@@ -103,7 +103,7 @@ const PicturesGallery = ({ images }) => {
                 cellRenderer={cellRenderer}
                 height={height}
                 width={width}
-                overscanByPixels={300}
+                overscanByPixels={1000}
               />
             );
           }}
