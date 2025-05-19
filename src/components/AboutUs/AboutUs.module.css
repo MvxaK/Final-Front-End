@@ -71,20 +71,20 @@
   background-color: var(--primary-hover);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .about_container {
     flex-direction: row;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
   }
 
   .about_image {
-    max-width: 100%;
+    max-width: 50%;
   }
 
   .about_img {
-    width: 100%;
-    width: 400px;
+    width: 60%;
+    width: 220px;
     max-width: 320px;
   }
 

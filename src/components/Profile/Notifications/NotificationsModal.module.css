@@ -81,23 +81,47 @@ h3 {
   color: var(--text-color);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 320px) {
+  .modalOverlay {
+    width: 50%;
+    padding: 0 10px;
+  }
+
   .modal {
-    padding: 20px;
+    padding: 15px;
+    max-width: 70%;
+    font-size: 0.9rem;
   }
 
   .notification {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .notification button {
+    padding: 4px 6px;
+    font-size: 0.8rem;
   }
 
   .buttons {
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
   .cancel {
     width: 100%;
     text-align: center;
+    padding: 8px;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  .timestamp {
+    font-size: 0.65rem;
   }
 }

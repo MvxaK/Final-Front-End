@@ -1,5 +1,6 @@
 import React from 'react';
 import s from './Comments.module.css';
+import avatar from '../../images/avatars/avatar2.png'
 
 const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, onLike, showRemove, onAvatarClick  }) => {
   
@@ -10,7 +11,7 @@ const Comments = ({ id, message, image, authorName, likes, isLiked, onRemove, on
         alt="avatar"
         className={s.avatar}
         onClick={onAvatarClick}
-        onError={(e) => { e.target.src = '/fallback_avatar.png'; }}
+        onError={(e) => { e.target.src = avatar; }}
       />
       <div className={s.contentWrapper}>
         <div className={s.content}>

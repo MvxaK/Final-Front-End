@@ -8,6 +8,7 @@
   border-top: 1px solid var(--primary-color);
   gap: 15px;
   margin-top: auto;
+  width: 100vw;
 }
 
 .contactForm {
@@ -65,12 +66,12 @@
 @media (max-width: 768px) {
   .contactForm {
     flex-direction: column;
-    width: 100%;
+    width: 50%;
   }
 
   .messageInput,
   .sendButton {
-    width: 100%;
+    width: 60%;
   }
 
   .socialIcons {

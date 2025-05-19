@@ -53,39 +53,36 @@ const Profile = () => {
       .catch((error) => console.error("Error:", error));
   };
 
-    useEffect(() => {
-      const checkNotifications = async () => {
-        try {
-          const userRef = doc(db, 'users', userId);
-          const userSnap = await getDoc(userRef);
-
-          let prefs = { comments: true, likes: true };
-          if (userSnap.exists()) {
-            const data = userSnap.data();
-            if (data.notificationPrefs) {
-              prefs = data.notificationPrefs;
-            }
+  useEffect(() => {
+    const checkNotifications = async () => {
+      try {
+        const userRef = doc(db, 'users', userId);
+        const userSnap = await getDoc(userRef);
+        let prefs = { comments: true, likes: true };
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.notificationPrefs) {
+            prefs = data.notificationPrefs;
           }
-
-          const snapshot = await getDocs(collection(db, 'users', userId, 'notifications'));
-          const rawNotifications = snapshot.docs.map(doc => doc.data());
-
-          const hasRelevantNotifications = rawNotifications.some(n => {
-            if (n.type === 'comment' && prefs.comments) return true;
-            if (n.type === 'like' && prefs.likes) return true;
-            return false;
-          });
-
-          setHasNotifications(hasRelevantNotifications);
-        } catch (error) {
-          console.error('Error checking notifications:', error);
         }
-      };
 
-      if (userId && isOwner) {
-        checkNotifications();
+        const snapshot = await getDocs(collection(db, 'users', userId, 'notifications'));
+        const rawNotifications = snapshot.docs.map(doc => doc.data());
+        const hasRelevantNotifications = rawNotifications.some(n => {
+          if (n.type === 'comment' && prefs.comments) return true;
+          if (n.type === 'like' && prefs.likes) return true;
+          return false;
+        });
+        setHasNotifications(hasRelevantNotifications);
+      } catch (error) {
+        console.error('Error with checking notifications:', error);
       }
-    }, [userId, isOwner, showNotifications]);
+    };
+
+    if (userId && isOwner) {
+      checkNotifications();
+    }
+  }, [userId, isOwner, showNotifications]);
 
 
   const { name = '', lastname = '', avatarUrl = '', status = '' } = userData || {};

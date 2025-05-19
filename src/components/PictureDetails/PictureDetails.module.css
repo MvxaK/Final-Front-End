@@ -78,12 +78,28 @@
   background-color: var(--primary-hover);
 }
 
-@media (max-width: 768px) {
+.backButton{
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: var(--primary-hover);
+}
+
+@media (max-width: 1024px) {
   .container {
     margin: 100px auto ;
     padding: 20px;
     height: auto;
-    width: 90%;
+    width: 60%;
     display: flex;
     justify-content: center;
     align-items: center;

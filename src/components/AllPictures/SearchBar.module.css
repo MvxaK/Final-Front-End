@@ -13,3 +13,10 @@
 .searchBar::placeholder {
   color: var(--text-color);
 }
+
+@media (max-width: 768px) {
+  .searchBar {
+    flex-direction: column;
+    width: 50%;
+  }
+}

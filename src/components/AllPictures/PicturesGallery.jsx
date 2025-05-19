@@ -44,13 +44,7 @@ const PicturesGallery = ({ images }) => {
     if (!image) return null;
     
     return (
-      <CellMeasurer
-        key={key}
-        cache={cache.current}
-        parent={parent}
-        columnIndex={0}
-        rowIndex={index}
-      >
+      <CellMeasurer key={key} cache={cache.current} parent={parent} columnIndex={0} rowIndex={index}>
         <div style={style}>
           <div className={s.imagePost}>
             <img
@@ -103,7 +97,7 @@ const PicturesGallery = ({ images }) => {
                 cellRenderer={cellRenderer}
                 height={height}
                 width={width}
-                overscanByPixels={1000}
+                overscanByPixels={10000}
               />
             );
           }}

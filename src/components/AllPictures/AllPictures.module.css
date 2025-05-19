@@ -64,4 +64,17 @@
   .imageDescription {
     font-size: 14px;
   }
+  .gallery {
+  width: 100%;
+  height: calc(100vh - 100px);
+}
+
+  .imagePost {
+    margin: 20px;
+    background: var(--modal-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
+    transition: transform 0.2s ease;
+  }
 }

@@ -20,8 +20,8 @@ const App = () => {
   return (
     <ThemeProvider>
       <ImagesProvider>
+        <Navbar />
         <div className="app-wrapper">
-          <Navbar />
           <Routes>
             <Route 
               path="/profile/:userId" 
@@ -86,8 +86,8 @@ const App = () => {
               }
             />
           </Routes>
-          <Footer />
         </div>
+        <Footer />
       </ImagesProvider>
     </ThemeProvider>
   );

@@ -122,7 +122,6 @@ const MyPictures = ({ userId }) => {
 
   const filteredImages = userImages
   .filter((img) =>
-    img.description.toLowerCase().includes(search.toLowerCase()) ||
     img.title.toLowerCase().includes(search.toLowerCase())
   )
   .sort((a, b) => {

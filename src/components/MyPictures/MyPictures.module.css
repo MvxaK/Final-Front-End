@@ -116,18 +116,26 @@
   color: var(--text-color);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .gallery {
-    height: auto;
+    height: 700px;
     padding: 0 10px;
   }
 
   .uploadedImage {
-    max-width: 100%;
+    width: 90%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .uploadedImage:hover {
+    transform: scale(1.05);
   }
 
   .input {
-    width: 100%;
+    width: 50%;
   }
 
   .searchBar {
@@ -141,6 +149,19 @@
 @media (max-width: 480px) {
   .imageTitle {
     font-size: 14px;
+  }
+
+  .addButton,
+  .editButton,
+  .removeButton {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .imageTitle {
+    font-size: 10px;
   }
 
   .addButton,

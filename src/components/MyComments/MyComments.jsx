@@ -103,7 +103,7 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
             createdAt: serverTimestamp()
           });
         } catch (err) {
-          console.error('Failed to add like notification:', err);
+          console.error('Errow with like notification:', err);
         }
       }
     }
@@ -113,7 +113,7 @@ export const MyComments = ({ profileId, profileImage, name, lastname }) => {
         likes: updatedLikes
       });
     } catch (err) {
-      console.error("Failed to update like:", err);
+      console.error("Error with update like:", err);
     }
   };
   

@@ -75,7 +75,7 @@ const Login = () => {
         <button type="button" onClick={handleGoogleLogin} className={s.googleButton}>
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google icon"
+            alt="Google"
             className={s.googleIcon}
           />
           Enter with Google

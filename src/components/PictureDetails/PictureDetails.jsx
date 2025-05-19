@@ -34,7 +34,7 @@ const PictureDetails = () => {
           lastname: "Kamalov",
           avatarUrl: profileAvatar,
         });
-        return <p>Loading...</p>;;
+        return;
       }
 
       try {
@@ -54,7 +54,7 @@ const PictureDetails = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        console.error("Error with user info:", error);
         setUserInfo({
           name: "Error",
           lastname: "Loading",
@@ -89,6 +89,10 @@ const PictureDetails = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    navigate(`/`);
+  };
+
   return (
     <div className={s.container}>
       <div className={s.content}>
@@ -119,6 +123,9 @@ const PictureDetails = () => {
               Download isn`t allowed due to security and law reasons.
             </p>
           )}
+          <button className={s.backButton} onClick={handleButtonClick}>
+              Back
+            </button>
         </div>
       </div>
     </div>

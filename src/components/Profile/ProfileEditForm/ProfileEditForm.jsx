@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../../firebase';
-import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes, deleteObject } from 'firebase/storage';
 import s from './ProfileEditForm.module.css';
 
@@ -32,8 +32,6 @@ const ProfileEditForm = ({ user, onUpdate, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const auth = getAuth();
 
     try {
       const userRef = doc(db, 'users', user.uid);
